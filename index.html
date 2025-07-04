@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swifit - Smart Fitness Food Recommender</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to right, #ffcc80, #ffe0b2);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background-color: #ef6c00;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 36px;
+    }
+    header p {
+      margin-top: 5px;
+      font-size: 18px;
+      font-weight: 300;
+    }
+    .container {
+      margin-top: 40px;
+      max-width: 700px;
+      width: 90%;
+      background-color: white;
+      padding: 35px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+    }
+    select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    button {
+      background-color: #fb8c00;
+      color: white;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #e65100;
+    }
+    #results {
+      margin-top: 30px;
+    }
+    .food-card {
+      background-color: #f1f8e9;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 6px solid #2e7d32;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .food-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .food-card-content {
+      flex: 1;
+    }
+    .food-card a {
+      color: #1e88e5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .food-card a:hover {
+      text-decoration: underline;
+    }
+    .spinner {
+      margin-top: 30px;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #2e7d32;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      .food-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .food-card img {
+        width: 80%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><img src="https://img.icons8.com/ios-filled/50/ffffff/fitness.png" style="height: 36px; vertical-align: middle; margin-right: 10px;" alt="logo"> Swifit</h1>
+    <p>Smart Food Suggestions for Your Fitness Goals 🍽️💪</p>
+  </header>
+
+  <div class="container">
+    <form id="fiteats-form">
+      <label for="goal" title="Choose your primary fitness objective">Your Fitness Goal:</label>
+      <select id="goal">
+        <option value="fat-loss">Fat Loss</option>
+        <option value="muscle-gain">Muscle Gain</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+
+      <label for="workout" title="What type of exercise did you do today?">Workout Type Today:</label>
+      <select id="workout">
+        <option value="cardio">Cardio</option>
+        <option value="strength">Strength</option>
+        <option value="rest">Rest Day</option>
+      </select>
+
+      <label for="diet" title="Pick your preferred diet type">Diet Preference:</label>
+      <select id="diet">
+        <option value="vegetarian">Vegetarian</option>
+        <option value="non-vegetarian">Non-Vegetarian</option>
+        <option value="keto">Keto</option>
+        <option value="high-protein">High Protein</option>
+      </select>
+
+      <button type="submit">🍲 Get Food Suggestions</button>
+    </form>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const API_KEY = '0ccbafdf1ebd42f8b7d8d754d888ea01';
+
+    document.getElementById('fiteats-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const goal = document.getElementById('goal').value;
+      const workout = document.getElementById('workout').value;
+      const diet = document.getElementById('diet').value;
+
+      let maxCalories = 700;
+      let minProtein = 10;
+
+      if (goal === 'fat-loss') {
+        maxCalories = 400;
+      } else if (goal === 'muscle-gain') {
+        minProtein = 20;
+      }
+
+      const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?diet=${diet}&maxCalories=${maxCalories}&addRecipeNutrition=true&addRecipeInformation=true&number=5&apiKey=${API_KEY}`;
+
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="spinner"></div>';
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (!data.results || data.results.length === 0) {
+          results.innerHTML = '<p>No recipes found. Try adjusting your filters.</p>';
+          return;
+        }
+
+        results.innerHTML = '<h3>Recommended Meals:</h3>';
+        data.results.forEach(item => {
+          const nutrition = item.nutrition?.nutrients || [];
+          const protein = nutrition.find(n => n.name === "Protein")?.amount || 'N/A';
+          const calories = nutrition.find(n => n.name === "Calories")?.amount || 'N/A';
+
+          if (protein >= minProtein) {
+            results.innerHTML += `
+              <div class="food-card">
+                <img src="${item.image}" alt="${item.title}">
+                <div class="food-card-content">
+                  <strong>${item.title}</strong><br>
+                  Calories: ${Math.round(calories)} kcal<br>
+                  Protein: ${Math.round(protein)}g<br>
+                  <a href="https://spoonacular.com/recipes/${item.title.replaceAll(' ', '-').toLowerCase()}-${item.id}" target="_blank">View Recipe</a><br><br>
+                  <button onclick="alert('Redirecting to Swifit to buy ingredients for ${item.title}')">🛒 Buy Now on Swifit</button>
+                </div>
+              </div>
+            `;
+          }
+        });
+      } catch (error) {
+        console.error('API Error:', error);
+        results.innerHTML = '<p>There was an error fetching the data. Please try again.</p>';
+      }
+    });
+  </script>
+<footer style="width: 100%; background-color: #ef6c00; color: white; text-align: center; padding: 20px; margin-top: 40px; font-size: 14px;">
+    <p>$1<br>
+      <a href="https://github.com" target="_blank" style="color: white; margin: 0 10px;"><img src="https://img.icons8.com/ios-filled/24/ffffff/github.png" alt="GitHub" /></a>
+      <a href="https://linkedin.com" target="_blank" style="color: white; margin: 0 10px;"><img src="https://img.icons8.com/ios-filled/24/ffffff/linkedin.png" alt="LinkedIn" /></a>
+    </p>
+  </footer>
+</body>
+</html>
