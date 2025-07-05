@@ -5,229 +5,772 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Swifit - Smart Fitness Food Recommender</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
-
-    body {
-      font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(to right, #ffcc80, #ffe0b2);
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap');
+    
+    * {
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      box-sizing: border-box;
     }
+    
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+    
+    body.dark-mode {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #f5f5f5;
+    }
+    
     header {
-      background-color: #ef6c00;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
       color: white;
-      padding: 30px;
+      padding: 20px;
       text-align: center;
-      width: 100%;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
-    header h1 {
-      margin: 0;
-      font-size: 36px;
+    
+    .logo {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
     }
-    header p {
-      margin-top: 5px;
-      font-size: 18px;
-      font-weight: 300;
+    
+    .header-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+      flex-wrap: wrap;
     }
+    
+    .control-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
     .container {
-      margin-top: 40px;
-      max-width: 700px;
-      width: 90%;
-      background-color: white;
-      padding: 35px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      border-radius: 12px;
+      margin: 40px auto;
+      max-width: 1200px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
+    
+    .form-section {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
     label {
-      display: block;
-      margin-top: 20px;
+      color: white;
       font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
     }
-    select, button {
+    
+    select, input {
       width: 100%;
       padding: 12px;
-      margin-top: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-    }
-    button {
-      background-color: #fb8c00;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
       color: white;
-      font-size: 17px;
+      font-size: 16px;
+      backdrop-filter: blur(5px);
+    }
+    
+    select option {
+      background: #333;
+      color: white;
+    }
+    
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .submit-btn {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 20px;
     }
-    button:hover {
-      background-color: #e65100;
+    
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     }
-    #results {
-      margin-top: 30px;
-    }
+    
     .food-card {
-      background-color: #f1f8e9;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
       padding: 20px;
-      margin-bottom: 20px;
-      border-left: 6px solid #2e7d32;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      margin: 20px 0;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 20px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
+    
+    .food-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
     .food-card img {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
+      border-radius: 15px;
       object-fit: cover;
-      border-radius: 8px;
     }
+    
     .food-card-content {
       flex: 1;
+      color: white;
     }
-    .food-card a {
-      color: #1e88e5;
-      text-decoration: none;
-      font-weight: bold;
+    
+    .food-card-content h3 {
+      margin-bottom: 10px;
+      color: #4ecdc4;
     }
-    .food-card a:hover {
-      text-decoration: underline;
+    
+    .action-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
     }
-    .spinner {
+    
+    .tts-btn, .buy-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .tts-btn {
+      background: #3498db;
+      color: white;
+    }
+    
+    .buy-btn {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .workout-section {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: 15px;
+      margin: 30px 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .workout-section h3 {
+      color: #4ecdc4;
+      margin-bottom: 15px;
+    }
+    
+    .chat-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
       margin-top: 30px;
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #2e7d32;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
+    }
+    
+    .ai-chat, .community-chat {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .chat-messages {
+      height: 300px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .chat-input {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .chat-input input {
+      flex: 1;
+      margin: 0;
+    }
+    
+    .chat-input button {
+      background: #4ecdc4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    
+    .message {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    
+    .user-message {
+      background: #4ecdc4;
+      color: white;
       margin-left: auto;
-      margin-right: auto;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    
+    .ai-message, .community-message {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
     }
+    
+    .loading {
+      text-align: center;
+      color: white;
+      padding: 20px;
+    }
+    
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
     @media (max-width: 768px) {
-      .container {
-        padding: 20px;
+      .chat-section {
+        grid-template-columns: 1fr;
       }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
       .food-card {
         flex-direction: column;
-        align-items: center;
         text-align: center;
       }
-      .food-card img {
-        width: 80%;
-        height: auto;
+      
+      .results-grid {
+        grid-template-columns: 1fr;
       }
+    }
+    
+    .dark-mode .container,
+    .dark-mode .form-section,
+    .dark-mode .workout-section,
+    .dark-mode .ai-chat,
+    .dark-mode .community-chat,
+    .dark-mode .food-card {
+      background: rgba(0, 0, 0, 0.3);
+    }
+    
+    .exercise-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 4px solid #4ecdc4;
+    }
+    
+    .exercise-card h4 {
+      color: #4ecdc4;
+      margin-bottom: 8px;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1><img src="https://img.icons8.com/ios-filled/50/ffffff/fitness.png" style="height: 36px; vertical-align: middle; margin-right: 10px;" alt="logo"> Swifit</h1>
-    <p>Smart Food Suggestions for Your Fitness Goals 🍽️💪</p>
+<div id="clock" style="position: absolute; top: 10px; left: 20px; font-size: 1.2rem; color: white;"></div>
+    <div class="logo">SwiFit</div>
+    <p>Smart Food & Workout Suggestions for Your Fitness Goals 🍽️💪</p>
+    <div class="header-controls">
+      <button class="control-btn" onclick="toggleDarkMode()">🌓 Toggle Theme</button>
+      <button class="control-btn" onclick="toggleTTS()">🔊 Toggle TTS</button>
+      <div id="google_translate_element"></div>
+    </div>
   </header>
 
   <div class="container">
-    <form id="fiteats-form">
-      <label for="goal" title="Choose your primary fitness objective">Your Fitness Goal:</label>
-      <select id="goal">
-        <option value="fat-loss">Fat Loss</option>
-        <option value="muscle-gain">Muscle Gain</option>
-        <option value="maintenance">Maintenance</option>
-      </select>
+    <div class="form-section">
+      <h2 style="color: white; margin-bottom: 20px;">🎯 Set Your Fitness Goals</h2>
+      <form id="swifit-form">
+        <div class="form-row">
+          <div>
+            <label for="goal">Fitness Goal:</label>
+            <select id="goal">
+              <option value="fat-loss">Fat Loss</option>
+              <option value="muscle-gain">Muscle Gain</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="endurance">Endurance</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="workout">Workout Type:</label>
+            <select id="workout">
+              <option value="cardio">Cardio</option>
+              <option value="strength">Strength Training</option>
+              <option value="yoga">Yoga</option>
+              <option value="hiit">HIIT</option>
+              <option value="rest">Rest Day</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div>
+            <label for="diet">Diet Preference:</label>
+            <select id="diet">
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="paleo">Paleo</option>
+              <option value="keto">Keto</option>
+              <option value="mediterranean">Mediterranean</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="caloriesInput">Calories consumed today:</label>
+            <input type="number" id="caloriesInput" placeholder="Enter calories (e.g. 1200)" />
+          </div>
+        </div>
+        
+        <button type="submit" class="submit-btn">🍲 Get Personalized Recommendations</button>
+      </form>
+    </div>
 
-      <label for="workout" title="What type of exercise did you do today?">Workout Type Today:</label>
-      <select id="workout">
-        <option value="cardio">Cardio</option>
-        <option value="strength">Strength</option>
-        <option value="rest">Rest Day</option>
-      </select>
+    <div id="exercise-recommendations" class="workout-section" style="display: none;">
+      <h3>💪 Exercise Recommendations</h3>
+      <div id="exercise-content"></div>
+    </div>
 
-      <label for="diet" title="Pick your preferred diet type">Diet Preference:</label>
-      <select id="diet">
-        <option value="vegetarian">Vegetarian</option>
-        <option value="non-vegetarian">Non-Vegetarian</option>
-        <option value="keto">Keto</option>
-        <option value="high-protein">High Protein</option>
-      </select>
+    <div id="wger-exercises" class="workout-section" style="display: none;">
+      <h3>🏋️ Professional Workout Suggestions</h3>
+      <div id="wger-content"></div>
+    </div>
 
-      <button type="submit">🍲 Get Food Suggestions</button>
-    </form>
+    <div id="results" class="workout-section" style="display: none;">
+      <h3>🍽️ Food Suggestions</h3>
+      <div id="food-results" class="results-grid"></div>
+    </div>
 
-    <div id="results"></div>
+    <div class="chat-section">
+      <div class="ai-chat">
+        <h3 style="color: #4ecdc4; margin-bottom: 15px;">🤖 AI Fitness Coach</h3>
+        <div id="ai-messages" class="chat-messages">
+          <div class="message ai-message">
+            <strong>AI Coach:</strong> Hello! I'm your personal fitness AI. Ask me about exercises, nutrition, or workout routines!
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" id="ai-input" placeholder="Ask about exercises, nutrition, etc..." />
+          <button onclick="sendAIMessage()">Send</button>
+        </div>
+      </div>
+
+      <div class="community-chat">
+        <h3 style="color: #4ecdc4; margin-bottom: 15px;">👥 Community Chat</h3>
+        <div id="community-messages" class="chat-messages">
+          <div class="message community-message">
+            <strong>FitUser123:</strong> Just tried the protein smoothie recipe from SwiFit! Amazing taste! 💪
+          </div>
+          <div class="message community-message">
+            <strong>HealthyMom:</strong> Anyone tried the HIIT workout? Looking for beginner tips!
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" id="community-input" placeholder="Share your fitness journey..." />
+          <button onclick="sendCommunityMessage()">Send</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     const API_KEY = '0ccbafdf1ebd42f8b7d8d754d888ea01';
+    let ttsEnabled = true;
+    let currentTheme = 'light';
+    
+    // Community chat messages
+    let communityMessages = [
+      { user: 'FitUser123', message: 'Just tried the protein smoothie recipe from SwiFit! Amazing taste! 💪' },
+      { user: 'HealthyMom', message: 'Anyone tried the HIIT workout? Looking for beginner tips!' },
+      { user: 'GymBro2024', message: 'The muscle gain meal plan worked wonders! Gained 2kg in a month!' }
+    ];
+    
+    // AI responses database
+    const aiResponses = {
+      'exercise': 'Here are some great exercises: Push-ups for chest, Squats for legs, Planks for core. Start with 3 sets of 10-15 reps!',
+      'nutrition': 'Focus on protein (0.8g per kg body weight), complex carbs, and healthy fats. Stay hydrated with 8-10 glasses of water daily!',
+      'workout': 'A good routine includes: 3 days strength training, 2 days cardio, 1 day flexibility, 1 rest day. Listen to your body!',
+      'diet': 'Eat whole foods, include colorful vegetables, lean proteins, and avoid processed foods. Meal prep helps consistency!',
+      'weight': 'Healthy weight loss is 0.5-1kg per week. Combine calorie deficit with regular exercise for best results.',
+      'muscle': 'For muscle gain: Progressive overload, adequate protein (1.6-2.2g per kg), proper rest, and consistency are key!',
+      'cardio': 'Mix different cardio types: Running, cycling, swimming, dancing. Aim for 150 minutes moderate or 75 minutes vigorous weekly.',
+      'rest': 'Rest days are crucial! They allow muscle recovery and prevent burnout. Try light walking or gentle stretching.',
+      'default': 'Great question! For personalized advice, consider your goals, current fitness level, and preferences. What specific area would you like to focus on?'
+    };
 
-    document.getElementById('fiteats-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+    }
 
-      const goal = document.getElementById('goal').value;
-      const workout = document.getElementById('workout').value;
-      const diet = document.getElementById('diet').value;
+    function toggleTTS() {
+      ttsEnabled = !ttsEnabled;
+      speak(`Text to speech ${ttsEnabled ? 'enabled' : 'disabled'}`);
+    }
 
-      let maxCalories = 700;
-      let minProtein = 10;
+    function speak(text) {
+      if (ttsEnabled && 'speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        speechSynthesis.speak(utterance);
+      }
+    }
 
+    function recommendExercise(calories, workoutType, goal) {
+      const exerciseDiv = document.getElementById('exercise-recommendations');
+      const content = document.getElementById('exercise-content');
+      
+      let recommendation = '';
+      let duration = '';
+      
+      if (calories > 1500) {
+        recommendation = 'High calorie intake detected! Focus on intense cardio and strength training.';
+        duration = '45-60 minutes HIIT or circuit training';
+      } else if (calories > 1000) {
+        recommendation = 'Moderate intake. Balance cardio and strength training.';
+        duration = '30-45 minutes mixed workout';
+      } else {
+        recommendation = 'Lower calorie intake. Light to moderate exercise recommended.';
+        duration = '20-30 minutes light cardio or yoga';
+      }
+      
+      const workoutSuggestions = {
+        'cardio': ['Running', 'Cycling', 'Swimming', 'Jump rope'],
+        'strength': ['Push-ups', 'Squats', 'Deadlifts', 'Pull-ups'],
+        'yoga': ['Sun salutations', 'Warrior poses', 'Downward dog', 'Tree pose'],
+        'hiit': ['Burpees', 'Mountain climbers', 'High knees', 'Jumping jacks'],
+        'rest': ['Gentle stretching', 'Meditation', 'Light walking', 'Breathing exercises']
+      };
+      
+      content.innerHTML = `
+        <div class="exercise-card">
+          <h4>Based on your ${calories} calorie intake:</h4>
+          <p>${recommendation}</p>
+          <p><strong>Suggested Duration:</strong> ${duration}</p>
+        </div>
+        <div class="exercise-card">
+          <h4>Recommended ${workoutType.toUpperCase()} exercises:</h4>
+          <ul>
+            ${workoutSuggestions[workoutType].map(ex => `<li>${ex}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      
+      exerciseDiv.style.display = 'block';
+      
+      if (ttsEnabled) {
+        speak(recommendation);
+      }
+    }
+
+    async function fetchWgerExercises() {
+      const wgerDiv = document.getElementById("wger-exercises");
+      const content = document.getElementById("wger-content");
+      
+      try {
+        const response = await fetch("https://wger.de/api/v2/exercise/?language=2&limit=8");
+        const data = await response.json();
+        
+        content.innerHTML = "";
+        data.results.forEach(exercise => {
+          const exerciseCard = document.createElement('div');
+          exerciseCard.className = 'exercise-card';
+          exerciseCard.innerHTML = `
+            <h4>${exercise.name}</h4>
+            <p>${exercise.description ? exercise.description.substring(0, 100) + '...' : 'Professional exercise for strength and conditioning'}</p>
+            <button class="tts-btn" onclick="speak('Exercise: ${exercise.name}')">🔊 Listen</button>
+          `;
+          content.appendChild(exerciseCard);
+        });
+        
+        wgerDiv.style.display = 'block';
+      } catch (error) {
+        content.innerHTML = "<p>Unable to load workout suggestions. Please try again later.</p>";
+        wgerDiv.style.display = 'block';
+      }
+    }
+
+    async function fetchFoodSuggestions(goal, diet, calories) {
+      const resultsDiv = document.getElementById('results');
+      const foodResults = document.getElementById('food-results');
+      
+      resultsDiv.style.display = 'block';
+      foodResults.innerHTML = '<div class="loading">🍽️ Finding perfect meals for you...</div>';
+      
+      let maxCalories = 600;
+      let minProtein = 15;
+      
       if (goal === 'fat-loss') {
         maxCalories = 400;
-      } else if (goal === 'muscle-gain') {
         minProtein = 20;
+      } else if (goal === 'muscle-gain') {
+        maxCalories = 800;
+        minProtein = 25;
+      } else if (goal === 'endurance') {
+        maxCalories = 700;
+        minProtein = 18;
       }
-
-      const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?diet=${diet}&maxCalories=${maxCalories}&addRecipeNutrition=true&addRecipeInformation=true&number=5&apiKey=${API_KEY}`;
-
-      const results = document.getElementById('results');
-      results.innerHTML = '<div class="spinner"></div>';
-
+      
+      const url = `https://api.spoonacular.com/recipes/complexSearch?diet=${diet}&maxCalories=${maxCalories}&addRecipeNutrition=true&addRecipeInformation=true&number=12&apiKey=${API_KEY}`;
+      
       try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(url);
         const data = await response.json();
-
-        if (!data.results || data.results.length === 0) {
-          results.innerHTML = '<p>No recipes found. Try adjusting your filters.</p>';
-          return;
-        }
-
-        results.innerHTML = '<h3>Recommended Meals:</h3>';
-        data.results.forEach(item => {
-          const nutrition = item.nutrition?.nutrients || [];
-          const protein = nutrition.find(n => n.name === "Protein")?.amount || 'N/A';
-          const calories = nutrition.find(n => n.name === "Calories")?.amount || 'N/A';
-
-          if (protein >= minProtein) {
-            results.innerHTML += `
-              <div class="food-card">
-                <img src="${item.image}" alt="${item.title}">
-                <div class="food-card-content">
-                  <strong>${item.title}</strong><br>
-                  Calories: ${Math.round(calories)} kcal<br>
-                  Protein: ${Math.round(protein)}g<br>
-                  <a href="https://spoonacular.com/recipes/${item.title.replaceAll(' ', '-').toLowerCase()}-${item.id}" target="_blank">View Recipe</a><br><br>
-                  <button onclick="alert('Redirecting to Swifit to buy ingredients for ${item.title}')">🛒 Buy Now on Swifit</button>
+        
+        if (data.results && data.results.length > 0) {
+          foodResults.innerHTML = '';
+          
+          data.results.forEach(item => {
+            const nutrition = item.nutrition?.nutrients || [];
+            const protein = nutrition.find(n => n.name === 'Protein')?.amount || 0;
+            const calories = nutrition.find(n => n.name === 'Calories')?.amount || 0;
+            const carbs = nutrition.find(n => n.name === 'Carbohydrates')?.amount || 0;
+            const fat = nutrition.find(n => n.name === 'Fat')?.amount || 0;
+            
+            const foodCard = document.createElement('div');
+            foodCard.className = 'food-card';
+            foodCard.innerHTML = `
+              <img src="${item.image}" alt="${item.title}" loading="lazy">
+              <div class="food-card-content">
+                <h3>${item.title}</h3>
+                <p><strong>Calories:</strong> ${Math.round(calories)} kcal</p>
+                <p><strong>Protein:</strong> ${Math.round(protein)}g</p>
+                <p><strong>Carbs:</strong> ${Math.round(carbs)}g</p>
+                <p><strong>Fat:</strong> ${Math.round(fat)}g</p>
+                <p><strong>Ready in:</strong> ${item.readyInMinutes} minutes</p>
+                <div class="action-btns">
+                  <button class="tts-btn" onclick="speak('Recipe: ${item.title}. Calories: ${Math.round(calories)}, Protein: ${Math.round(protein)} grams, Ready in ${item.readyInMinutes} minutes')">🔊 Listen</button>
+                  <button class="buy-btn" onclick="orderFood('${item.title}')">🛒 Order Now</button>
                 </div>
               </div>
             `;
+            foodResults.appendChild(foodCard);
+          });
+          
+          if (ttsEnabled) {
+            speak(`Found ${data.results.length} delicious meal suggestions for your ${goal} goal!`);
           }
-        });
+        } else {
+          foodResults.innerHTML = '<p>No recipes found. Try adjusting your preferences!</p>';
+        }
       } catch (error) {
-        console.error('API Error:', error);
-        results.innerHTML = '<p>There was an error fetching the data. Please try again.</p>';
+        foodResults.innerHTML = '<p>Unable to fetch food suggestions. Please check your internet connection.</p>';
+      }
+    }
+
+    function orderFood(foodName) {
+      alert(`🛒 Great choice! "${foodName}" has been added to your SwiFit meal plan. We'll connect you with local restaurants soon!`);
+      speak(`${foodName} added to your meal plan`);
+    }
+
+    function sendAIMessage() {
+      const input = document.getElementById('ai-input');
+      const messages = document.getElementById('ai-messages');
+      const message = input.value.trim();
+      
+      if (message) {
+        // Add user message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message user-message';
+        userMsg.innerHTML = `<strong>You:</strong> ${message}`;
+        messages.appendChild(userMsg);
+        
+        // Generate AI response
+        const aiResponse = generateAIResponse(message);
+        setTimeout(() => {
+          const aiMsg = document.createElement('div');
+          aiMsg.className = 'message ai-message';
+          aiMsg.innerHTML = `<strong>AI Coach:</strong> ${aiResponse}`;
+          messages.appendChild(aiMsg);
+          messages.scrollTop = messages.scrollHeight;
+          
+          if (ttsEnabled) {
+            speak(aiResponse);
+          }
+        }, 1000);
+        
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+      }
+    }
+
+    function generateAIResponse(message) {
+      const msg = message.toLowerCase();
+      
+      for (const [key, response] of Object.entries(aiResponses)) {
+        if (msg.includes(key)) {
+          return response;
+        }
+      }
+      
+      return aiResponses.default;
+    }
+
+    function sendCommunityMessage() {
+      const input = document.getElementById('community-input');
+      const messages = document.getElementById('community-messages');
+      const message = input.value.trim();
+      
+      if (message) {
+        const userName = 'You';
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message user-message';
+        msgDiv.innerHTML = `<strong>${userName}:</strong> ${message}`;
+        messages.appendChild(msgDiv);
+        
+        // Add to community messages
+        communityMessages.push({ user: userName, message: message });
+        
+        // Simulate community response
+        setTimeout(() => {
+          const responses = [
+            'Great progress! Keep it up! 💪',
+            'Thanks for sharing! Very helpful!',
+            'I had similar results! Amazing!',
+            'Awesome journey! Inspiring! 🔥',
+            'Keep pushing forward! You got this!'
+          ];
+          
+          const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+          const responseDiv = document.createElement('div');
+          responseDiv.className = 'message community-message';
+          responseDiv.innerHTML = `<strong>CommunityMember:</strong> ${randomResponse}`;
+          messages.appendChild(responseDiv);
+          messages.scrollTop = messages.scrollHeight;
+        }, 2000);
+        
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+      }
+    }
+
+    // Event listeners
+    document.getElementById('swifit-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const goal = document.getElementById('goal').value;
+      const workout = document.getElementById('workout').value;
+      const diet = document.getElementById('diet').value;
+      const calories = parseInt(document.getElementById('caloriesInput').value || 0);
+      
+      // Show loading state
+      speak('Generating your personalized fitness and nutrition plan');
+      
+      // Get recommendations
+      recommendExercise(calories, workout, goal);
+      await fetchWgerExercises();
+      await fetchFoodSuggestions(goal, diet, calories);
+    });
+
+    // Enter key handlers
+    document.getElementById('ai-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendAIMessage();
       }
     });
-  </script>
-<footer style="width: 100%; background-color: #ef6c00; color: white; text-align: center; padding: 20px; margin-top: 40px; font-size: 14px;">
-    <p>$1<br>
-      <a href="https://github.com" target="_blank" style="color: white; margin: 0 10px;"><img src="https://img.icons8.com/ios-filled/24/ffffff/github.png" alt="GitHub" /></a>
-      <a href="https://linkedin.com" target="_blank" style="color: white; margin: 0 10px;"><img src="https://img.icons8.com/ios-filled/24/ffffff/linkedin.png" alt="LinkedIn" /></a>
-    </p>
-  </footer>
+
+    document.getElementById('community-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendCommunityMessage();
+      }
+    });
+
+    // Initialize Google Translate
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,es,fr,de,it,pt,ru,ja,ko,zh',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+
+    // Welcome message
+    window.addEventListener('load', function() {
+      speak('Welcome to SwiFit! Your smart fitness companion is ready to help you achieve your goals!');
+    });
+  
+// Clock Function (IST - India Time)
+function updateClock() {
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in ms
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const istTime = new Date(utc + istOffset);
+  const hours = istTime.getHours().toString().padStart(2, '0');
+  const minutes = istTime.getMinutes().toString().padStart(2, '0');
+  const seconds = istTime.getSeconds().toString().padStart(2, '0');
+  document.getElementById('clock').textContent = `🇮🇳 ${hours}:${minutes}:${seconds}`;
+}
+setInterval(updateClock, 1000);
+updateClock(); // Initial call
+
+</script>
+
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
