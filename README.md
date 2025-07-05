@@ -47,9 +47,9 @@ Built with 💙 for the **Call2Code Hackathon 2025**.
 
 ## 🌐 Live Demo (optional)
 
-> _(Replace with your GitHub Pages URL)_
+> https://darkdemonking29.github.io/swifit/
 
-[🔗 Visit Swifit Live](https://yourusername.github.io/swifit/)
+
 
 ---
 
